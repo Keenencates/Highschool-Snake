@@ -1,0 +1,124 @@
+<h2>Snake</h2>
+
+<canvas id="c" width="512" height="512" style="border: 1px solid black;"></canvas>
+
+<p>Current score: <span id="score">0</span></p>
+<p>Best score: <span id="bestscore">0</span></p>
+
+<script>
+var canvas = document.getElementById('c');
+var ctx = canvas.getContext('2d');
+
+var BLOCK = 16;
+
+var dir = {x: 0, y: 0}
+var snake = [{x: 10, y: 10}];
+var food = {x: 20, y: 15};
+var size = 1;
+var bestScore = 0;
+
+document.addEventListener('keydown', function(event) {
+	switch(event.key) {
+		case 'ArrowRight':
+			dir = {x: 1, y: 0};
+			break;
+		case 'ArrowLeft':
+			dir = {x: -1, y: 0};
+			break;
+		case 'ArrowDown':
+			dir = {x: 0, y: 1};
+			break;
+		case 'ArrowUp':
+			dir = {x: 0, y: -1};
+			break;
+	}
+});
+
+function drawBlock(x, y, color) {
+	ctx.fillStyle = color;
+	ctx.fillRect(x * BLOCK, y * BLOCK, BLOCK, BLOCK);
+}
+
+function startGame() {
+	dir = {x: 0, y: 0};	
+	snake = [{x: 10, y: 10}];
+	size = 1;
+	replaceFood();
+}
+
+function hasLost() {
+	// Is the snake's head hitting itself?
+	var head = snake[0];
+	for(var i = 1; i < snake.length; i++) {
+		if(snake[i].x == head.x && snake[i].y == head.y) {
+			return true;
+		}
+	}
+
+	// Is the snake's head outside of the border?
+	if(head.x < 0 || head.x > 32 || head.y < 0 || head.y > 32)
+		return true;
+
+	// Haven't lost!
+	return false;
+}
+
+function hasFoundFood() {
+	var head = snake[0];
+	return head.x == food.x && head.y == food.y;
+}
+
+function replaceFood() {
+	var newX = Math.round(Math.random() * 32);
+	var newY = Math.round(Math.random() * 32);
+
+	// Make sure the food doesn't hit the snake
+	for(var i = 1; i < snake.length; i++)
+		if(snake[i].x == food.x && snake[i].y == food.y)
+			return replaceFood();
+
+	food.x = newX;
+	food.y = newY;
+	size++;
+
+	// Update the scores
+	score = size - 1;
+	if(score > bestScore)
+		bestScore = score;
+
+	document.getElementById('score').innerText = score;
+	document.getElementById('bestscore').innerText = bestScore;
+}
+
+function redraw() {
+	if(hasLost()) {
+		alert('Game over! :(');
+		startGame();
+	}
+
+	if(hasFoundFood())
+		replaceFood();
+
+	ctx.clearRect(0, 0, 512, 512);
+	
+	for(var snakePart of snake)
+		drawBlock(snakePart.x, snakePart.y, 'black');
+	
+	if(dir.x != 0 || dir.y != 0) {
+		var newHead = {};
+		newHead.x = snake[0].x + dir.x;
+		newHead.y = snake[0].y + dir.y;
+		
+		snake.unshift(newHead);
+		snake = snake.slice(0, size);
+	}
+
+	// Draw the food
+	drawBlock(food.x, food.y, 'red');
+}
+
+
+redraw();
+
+setInterval(redraw, 100);
+</script>
