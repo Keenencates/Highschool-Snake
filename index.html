@@ -127,28 +127,11 @@ function drawTheFood() {
 	drawBlock(food.x, food.y, 'red');
 }
 
-function drawTheGame() {
-	// If you have lost, what do you do?
-	if(hasLost()) {
-		showGameOver();
-		restartGame();
-	}
+</script>
 
-	// Draw the snake
-	startRedrawing();
-	drawTheSnake();
-	moveTheSnake();
+<script src="shell.js"></script>
 
-	// Grow the snake and replace the food once you get it
-	if(hasFoundFood()) {
-		replaceFood();
-		growSnake();
-	}
-
-	// Draw the food in its new place
-	drawTheFood(); 
-}
-
+<script>
 drawTheGame();
 
 setInterval(drawTheGame, 100);
