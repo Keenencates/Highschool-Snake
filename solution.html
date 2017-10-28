@@ -75,8 +75,8 @@ function hasFoundFood() {
 }
 
 function replaceFood() {
-	var newX = Math.round(Math.random() * 32);
-	var newY = Math.round(Math.random() * 32);
+	var newX = Math.round(Math.random() * (WIDTH / BLOCK - 1) );
+	var newY = Math.round(Math.random() * (HEIGHT / BLOCK - 1) );
 
 	// Make sure the food doesn't hit the snake
 	for(var i = 1; i < snake.length; i++)
@@ -85,7 +85,6 @@ function replaceFood() {
 
 	food.x = newX;
 	food.y = newY;
-	size++;
 
 	// Update the scores
 	score = size - 1;
@@ -94,6 +93,10 @@ function replaceFood() {
 
 	document.getElementById('score').innerText = score;
 	document.getElementById('bestscore').innerText = bestScore;
+}
+
+function growSnake() {
+	size++;
 }
 
 function showGameOver() {
@@ -125,19 +128,25 @@ function drawTheFood() {
 }
 
 function drawTheGame() {
+	// If you have lost, what do you do?
 	if(hasLost()) {
 		showGameOver();
 		restartGame();
 	}
 
+	// Draw the snake
 	startRedrawing();
 	drawTheSnake();
 	moveTheSnake();
 
-	if(hasFoundFood())
+	// Grow the snake and replace the food once you get it
+	if(hasFoundFood()) {
 		replaceFood();
+		growSnake();
+	}
 
-	drawTheFood();
+	// Draw the food in its new place
+	drawTheFood(); 
 }
 
 drawTheGame();
