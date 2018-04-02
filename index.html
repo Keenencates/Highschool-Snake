@@ -33,10 +33,8 @@ document.addEventListener('keydown', function(event) {
 			if(size < 2 || dir.y != -1)
 				dir = {x: 0, y: 1};
 			break;
-		case 'ArrowUp':
-			if(size < 2 || dir.y != 1)
-				dir = {x: 0, y: -1};
-			break;
+
+		//What about making the snake move upwards?
 	}
 });
 
@@ -55,7 +53,10 @@ function restartGame() {
 function hasLost() {
 	// Is the snake's head hitting itself?
 	var head = snake[0];
-	for(var i = 1; i < snake.length; i++) {
+    
+    //What would happen if we changed the starting length of the Snake?
+	
+    for(var i = 1; i < snake.length; i++) {
 		if(snake[i].x == head.x && snake[i].y == head.y) {
 			return true;
 		}
@@ -96,14 +97,17 @@ function replaceFood() {
 }
 
 function growSnake() {
-	size++;
+    //How could you make the snake grow more than one square?
+	size = size + 1;
 }
 
 function showGameOver() {
+    //Change the gameover message!
 	alert('Game over! :(');
 }
 
 function drawTheSnake() {
+    //Can you change the color of the snake?
 	for(var snakePart of snake)
 		drawBlock(snakePart.x, snakePart.y, 'black');
 }
